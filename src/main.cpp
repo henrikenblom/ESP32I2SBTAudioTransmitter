@@ -13,28 +13,22 @@ int32_t get_sound_data(Frame *data, const int32_t frameCount) {
            BYTES_PER_FRAME;
 }
 
-void setup() {
-    setCpuFrequencyMhz(80);
-    Serial.begin(115200);
-    AudioToolsLogger.begin(Serial, AudioToolsLogLevel::Info);
-
-    // start i2s input with default configuration
-    Serial.println("starting I2S...");
-    auto cfg = i2s.defaultConfig(RX_MODE);
-    cfg.i2s_format = I2S_STD_FORMAT; // or try with I2S_LSB_FORMAT
-    cfg.copyFrom(info44k1);
-    cfg.is_master = false;
-    i2s.begin(cfg);
-
-    // start the bluetooth
-    Serial.println("starting A2DP...");
-    // a2dp_source.set_auto_reconnect(false);
-    a2dp_source.start("SRS-XB100", get_sound_data);
-
-    Serial.println("A2DP started");
+void avoidWatchdogReboots() {
+    delay(1000);
 }
 
-// Arduino loop - repeated processing
-void loop() { delay(1000); }
+void setup() {
+    setCpuFrequencyMhz(80);
+    Serial1.begin(115200);
+    auto cfg = i2s.defaultConfig(RX_MODE);
+    cfg.i2s_format = I2S_STD_FORMAT;
+    cfg.is_master = false;
+    cfg.set(info44k1);
+    i2s.begin(cfg);
 
-// SRS-XB100
+    a2dp_source.start("SRS-XB100", get_sound_data);
+}
+
+void loop() {
+    avoidWatchdogReboots();
+}
