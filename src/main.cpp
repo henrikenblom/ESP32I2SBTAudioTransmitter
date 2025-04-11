@@ -19,14 +19,14 @@ void avoidWatchdogReboots() {
 
 void setup() {
     setCpuFrequencyMhz(80);
-    Serial1.begin(115200);
+    Serial.begin(115200);
     auto cfg = i2s.defaultConfig(RX_MODE);
     cfg.i2s_format = I2S_STD_FORMAT;
     cfg.is_master = false;
     cfg.set(info44k1);
     i2s.begin(cfg);
 
-    a2dp_source.start("SRS-XB100", get_sound_data);
+    a2dp_source.start("84-1511", get_sound_data);
 }
 
 void loop() {
